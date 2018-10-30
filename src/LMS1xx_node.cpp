@@ -99,11 +99,19 @@ int main(int argc, char **argv)
     ROS_DEBUG_STREAM("Device frequency is " << (double)cfg.scaningFrequency / 100.0 << " Hz");
 
     int angle_range = outputRange.stopAngle - outputRange.startAngle;
-    int num_values = angle_range / outputRange.angleResolution;
-    if (angle_range % outputRange.angleResolution == 0)
+    int num_values;
+    if (cfg.angleResolution == 2500)
     {
-      // Include endpoint
-      ++num_values;
+      num_values = 1081;
+    }
+    else if (cfg.angleResolution == 5000)
+    {
+      num_values = 541;
+    }
+    else
+    {
+      ROS_ERROR("Unsupported resolution");
+      return 0;
     }
     scan_msg.ranges.resize(num_values);
     scan_msg.intensities.resize(num_values);
